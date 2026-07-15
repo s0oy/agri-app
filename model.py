@@ -36,6 +36,27 @@ pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, pred)
 print(f'평균 오차(MAE): {mae:.0f}원')
 
+# 변수 중요도 확인
+importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print()
+print('변수 중요도:')
+for _, row in importance.iterrows():
+    print(f"  {row['feature']}: {row['importance']*100:.1f}%")
+
+# 변수 중요도 그래프
+plt.figure(figsize=(8, 5))
+plt.barh(importance['feature'], importance['importance'])
+plt.title('Feature Importance')
+plt.xlabel('Importance')
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.savefig('importance.png')
+print('중요도 그래프 저장 완료: importance.png')
+
 # 8. 그래프
 plt.figure(figsize=(12, 5))
 plt.plot(df['date'][split:], y_test.values, label='Actual', marker='o', markersize=3)
